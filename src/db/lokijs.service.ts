@@ -19,7 +19,12 @@ export class LokijsService implements OnModuleInit {
         return this.movies.insert(moviesData);
     }
 
-    findMovies() {
+    findAllMovies() {
         return this.movies.find();
     }
+
+    findWinnerMovies() {
+        return this.movies.find({ winner: 'yes' });
+    }
+
 }
