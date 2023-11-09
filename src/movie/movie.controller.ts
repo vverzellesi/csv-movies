@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
+import { YearIntervalDto } from './dto/get-movies.dto';
 import { MovieService } from './movie.service';
 
 export interface MoviesResponse {
@@ -11,7 +12,9 @@ export class MovieController {
     constructor(private readonly movieService: MovieService) { }
 
     @Get()
-    getMovies(): Promise<MoviesResponse> {
-        return this.movieService.getMovies();
+    getMovies(
+        @Query(ValidationPipe) query: YearIntervalDto,
+    ): Promise<MoviesResponse> {
+        return this.movieService.getMovies(query);
     }
 }

@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as csv from 'csvtojson';
 import * as _ from 'lodash';
 import { LokijsService } from '../db/lokijs.service';
+import { YearIntervalDto } from './dto/get-movies.dto';
 import { MoviesResponse } from './movie.controller';
 
 @Injectable()
@@ -27,8 +28,10 @@ export class MovieService {
         private readonly lokijsService: LokijsService,
     ) { }
 
-    async getMovies(): Promise<MoviesResponse> {
-        const movies = await this.lokijsService.findWinnerMovies();
+    async getMovies(interval?: YearIntervalDto): Promise<MoviesResponse> {
+        const movies = _.isEmpty(interval) ?
+            await this.lokijsService.findWinnerMovies() :
+            await this.lokijsService.findWinnerMoviesWithInterval(interval.startYear, interval.endYear);
         const groupedMovies = _.groupBy(movies, movie => movie.producers);
         const results = {
             min: [],
