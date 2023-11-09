@@ -1,7 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import * as csv from 'csvtojson';
 import * as _ from 'lodash';
 import { LokijsService } from '../db/lokijs.service';
 import { MoviesResponse } from './movie.controller';
+
+@Injectable()
+export class CsvToJsonService implements OnModuleInit {
+    constructor(
+        private readonly lokijsService: LokijsService,
+    ) { }
+
+    async onModuleInit() {
+        try {
+            Logger.log('Converting CSV file to JSON...');
+            const jsonMovies = await csv({ delimiter: ';' }).fromFile('src/data/movielist.csv');
+            this.lokijsService.createMovies(jsonMovies);
+        } catch (error) {
+            throw new Error(`Error converting CSV to JSON: ${error.message}`);
+        }
+    }
+}
 
 @Injectable()
 export class MovieService {
