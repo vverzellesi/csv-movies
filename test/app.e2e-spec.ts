@@ -1,24 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
+import { AppService } from '../src/app.service';
+import { LokijsService } from '../src/db/lokijs.service';
+import { EXPECTED_MAX, EXPECTED_MIN, MOVIES_JSON_DATA } from './dataset/app.service.dataset';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication;
+describe('AppService (Retrieving the response from the main endpoint)', () => {
+  let app;
+  let lokijsService: LokijsService;
+  let moduleFixture: TestingModule;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
     await app.init();
+
+    lokijsService = moduleFixture.get<LokijsService>(LokijsService);
+    lokijsService.findWinnerMovies = jest.fn().mockReturnValue(MOVIES_JSON_DATA);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return valid results for getMovies', async () => {
+    const appService = moduleFixture.get<AppService>(AppService);
+    const response = await appService.getMovies();
+
+    expect(response).toBeDefined();
+    expect(response.min).toEqual(EXPECTED_MIN);
+    expect(response.max).toEqual(EXPECTED_MAX);
   });
 });
