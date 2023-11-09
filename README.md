@@ -66,10 +66,18 @@ The response from this endpoint will follow the format below:
 }
 ```
 
+### Optional Parameters
+Optionally, this endpoint accepts query parameters to specify the range of years to perform the awards search.
+The parameters are `startYear` and `endYear`. The request would look like the following:
+
+```http
+GET localhost:3000?startYear=1980&endYear=2010
+```
+
 ## Testing
 To execute e2e tests, run the following command:
 ```
-npm run test:e2e
+npm run test
 ```
 
 ---
@@ -139,8 +147,15 @@ O retorno desse endpoint seguirá o seguinte formato:
 }
 ```
 
+### Parâmetros Opcionais
+Opcionalmente, este endpoint aceita parâmetros na query para especificar o intervalo de anos da pesquisa de premiações. Os parâmetros são `startYear` e `endYear`. A requisição ficaria da seguinte forma:
+
+```http
+GET localhost:3000?startYear=1980&endYear=2010
+```
+
 ## Testes
 Para rodar testes e2e, execute o seguinte comando:
 ```
-npm run test:e2e
+npm run test
 ```
