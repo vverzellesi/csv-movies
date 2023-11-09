@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { AppService } from '../src/app.service';
 import { LokijsService } from '../src/db/lokijs.service';
 import { EXPECTED_MAX, EXPECTED_MIN, MOVIES_JSON_DATA } from './dataset/app.service.dataset';
+import { MovieService } from '../src/movie/movie.service';
 
 describe('AppService (Retrieving the response from the main endpoint)', () => {
   let app;
@@ -27,8 +27,8 @@ describe('AppService (Retrieving the response from the main endpoint)', () => {
   });
 
   it('should return valid results for getMovies', async () => {
-    const appService = moduleFixture.get<AppService>(AppService);
-    const response = await appService.getMovies();
+    const movieService = moduleFixture.get<MovieService>(MovieService);
+    const response = await movieService.getMovies();
 
     expect(response).toBeDefined();
     expect(response.min).toEqual(EXPECTED_MIN);

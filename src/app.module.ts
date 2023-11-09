@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService, CsvToJsonService } from './app.service';
+import { CsvToJsonService } from './app.service';
 import { LokijsService } from './db/lokijs.service';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService, CsvToJsonService, LokijsService],
+  imports: [MovieModule],
+  providers: [CsvToJsonService, LokijsService],
 })
 export class AppModule { }
