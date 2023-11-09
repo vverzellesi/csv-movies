@@ -35,14 +35,6 @@ export class AppService {
       max: [],
     };
 
-    results.min = this.calculateMinInterval(groupedMovies);
-
-    return results;
-  }
-
-  calculateMinInterval(groupedMovies): any[] {
-    const minResults = [];
-
     for (const producer in groupedMovies) {
       if (groupedMovies[producer].length < 2) {
         continue;
@@ -56,20 +48,46 @@ export class AppService {
       }
 
       const minInterval = _.minBy(intervals);
+      const maxInterval = _.maxBy(intervals);
 
-      if (minInterval < minResults[0]?.interval) {
-        minResults.length = 0;
+      if (results.min.length === 0 || minInterval < results.min[0].interval) {
+        results.min = [
+          {
+            producer,
+            interval: minInterval,
+            previousWin: years[intervals.indexOf(minInterval)],
+            followingWin: years[intervals.indexOf(minInterval) + 1],
+          },
+        ];
+      } else if (minInterval === results.min[0].interval) {
+        results.min.push({
+          producer,
+          interval: minInterval,
+          previousWin: years[intervals.indexOf(minInterval)],
+          followingWin: years[intervals.indexOf(minInterval) + 1],
+        });
       }
 
-      minResults.push({
-        producer,
-        interval: minInterval,
-        previousWin: years[intervals.indexOf(minInterval)],
-        followingWin: years[intervals.indexOf(minInterval) + 1],
-      });
+      if (results.max.length === 0 || maxInterval > results.max[0].interval) {
+        results.max = [
+          {
+            producer,
+            interval: maxInterval,
+            previousWin: years[intervals.indexOf(maxInterval)],
+            followingWin: years[intervals.indexOf(maxInterval) + 1],
+          },
+        ];
+      } else if (maxInterval === results.max[0].interval) {
+        results.max.push({
+          producer,
+          interval: maxInterval,
+          previousWin: years[intervals.indexOf(maxInterval)],
+          followingWin: years[intervals.indexOf(maxInterval) + 1],
+        });
+      }
 
     }
 
-    return minResults;
+    return results;
   }
 }
