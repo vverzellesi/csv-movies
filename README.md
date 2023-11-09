@@ -69,7 +69,7 @@ The response from this endpoint will follow the format below:
 ## Testing
 To execute e2e tests, run the following command:
 ```
-npm run test
+npm run test:e2e
 ```
 
 ---
@@ -142,5 +142,5 @@ O retorno desse endpoint seguirá o seguinte formato:
 ## Testes
 Para rodar testes e2e, execute o seguinte comando:
 ```
-npm run test
+npm run test:e2e
 ```
