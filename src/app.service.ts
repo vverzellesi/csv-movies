@@ -35,8 +35,6 @@ export class AppService {
       max: [],
     };
 
-    let minInterval = Number.MAX_SAFE_INTEGER;
-
     for (const producer in groupedMovies) {
       if (groupedMovies[producer].length < 2) {
         continue;
@@ -49,20 +47,20 @@ export class AppService {
         intervals.push(years[i] - years[i - 1]);
       }
 
-      const minProducerInterval = Math.min(...intervals);
+      const minInterval = _.minBy(intervals);
+      Logger.log('min...', minInterval);
 
-      if (minProducerInterval < minInterval) {
-        minInterval = minProducerInterval;
+      if (minInterval < results.min[0].interval) {
+        results.min[0].length = 0;
       }
 
-      if (minProducerInterval === minInterval) {
-        results.min.push({
-          producer,
-          interval: minProducerInterval,
-          previousWin: years[intervals.indexOf(minProducerInterval)],
-          followingWin: years[intervals.indexOf(minProducerInterval) + 1],
-        });
-      }
+      results.min.push({
+        producer,
+        interval: minInterval,
+        previousWin: years[intervals.indexOf(minInterval)],
+        followingWin: years[intervals.indexOf(minInterval) + 1],
+      });
+
     }
 
     return results;
