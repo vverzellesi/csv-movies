@@ -35,6 +35,14 @@ export class AppService {
       max: [],
     };
 
+    results.min = this.calculateMinInterval(groupedMovies);
+
+    return results;
+  }
+
+  calculateMinInterval(groupedMovies): any[] {
+    const minResults = [];
+
     for (const producer in groupedMovies) {
       if (groupedMovies[producer].length < 2) {
         continue;
@@ -48,13 +56,12 @@ export class AppService {
       }
 
       const minInterval = _.minBy(intervals);
-      Logger.log('min...', minInterval);
 
-      if (minInterval < results.min[0].interval) {
-        results.min[0].length = 0;
+      if (minInterval < minResults[0]?.interval) {
+        minResults.length = 0;
       }
 
-      results.min.push({
+      minResults.push({
         producer,
         interval: minInterval,
         previousWin: years[intervals.indexOf(minInterval)],
@@ -63,6 +70,6 @@ export class AppService {
 
     }
 
-    return results;
+    return minResults;
   }
 }
