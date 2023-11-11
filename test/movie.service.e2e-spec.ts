@@ -21,9 +21,9 @@ describe('AppService (Retrieving the response from the main endpoint)', () => {
     await app.close();
   });
 
-  it('should return valid results for getMovies', async () => {
+  it('should return valid results for getProducersInterval', async () => {
     const movieService = moduleFixture.get<MovieService>(MovieService);
-    const response = await movieService.getMovies();
+    const response = await movieService.getProducersInterval();
 
     expect(response).toBeDefined();
     expect(response.min).toEqual(EXPECTED_MIN);

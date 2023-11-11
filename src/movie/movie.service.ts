@@ -28,7 +28,7 @@ export class MovieService {
         private readonly lokijsService: LokijsService,
     ) { }
 
-    async getMovies(interval?: YearIntervalDto): Promise<MoviesResponse> {
+    async getProducersInterval(interval?: YearIntervalDto): Promise<MoviesResponse> {
         const movies = _.isEmpty(interval) ?
             await this.lokijsService.findWinnerMovies() :
             await this.lokijsService.findWinnerMoviesWithInterval(interval.startYear, interval.endYear);

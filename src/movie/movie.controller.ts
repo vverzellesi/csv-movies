@@ -15,6 +15,6 @@ export class MovieController {
     getMovies(
         @Query(ValidationPipe) query: YearIntervalDto,
     ): Promise<MoviesResponse> {
-        return this.movieService.getMovies(query);
+        return this.movieService.getProducersInterval(query);
     }
 }
