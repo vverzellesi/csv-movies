@@ -2,9 +2,16 @@ import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
 import { YearIntervalDto } from './dto/get-movies.dto';
 import { MovieService } from './movie.service';
 
+interface MovieProducerInfo {
+    producer: string;
+    interval: number;
+    previousWin: number;
+    followingWin: number;
+}
+
 export interface MoviesResponse {
-    min: any[],
-    max: any[],
+    min: MovieProducerInfo[];
+    max: MovieProducerInfo[];
 }
 
 @Controller()
