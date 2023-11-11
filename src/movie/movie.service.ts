@@ -32,18 +32,35 @@ export class MovieService {
         const movies = _.isEmpty(interval) ?
             await this.lokijsService.findWinnerMovies() :
             await this.lokijsService.findWinnerMoviesWithInterval(interval.startYear, interval.endYear);
-        const groupedMovies = _.groupBy(movies, movie => movie.producers);
+
+        const orderedMovies = movies.flatMap(movie => {
+            const splittedProducers = movie.producers.split(/, | and |and /).filter(producer => producer);
+            return splittedProducers.length > 1 ?
+                splittedProducers.map(producer => ({
+                    year: movie.year,
+                    title: movie.title,
+                    studios: movie.studios,
+                    producers: producer,
+                    winner: movie.winner,
+                })) :
+                movie;
+        });
+
+        const groupedProducers = _.groupBy(
+            _.orderBy(orderedMovies),
+            movie => movie.producers
+        );
         const results = {
             min: [],
             max: [],
         };
 
-        for (const producer in groupedMovies) {
-            if (groupedMovies[producer].length < 2) {
+        for (const producer in groupedProducers) {
+            if (groupedProducers[producer].length < 2) {
                 continue;
             }
 
-            const years = groupedMovies[producer].map(data => Number(data.year));
+            const years = groupedProducers[producer].map(data => Number(data.year));
             const intervals = [];
 
             for (let i = 1; i < years.length; i++) {
