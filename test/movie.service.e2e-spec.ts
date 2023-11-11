@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { LokijsService } from '../src/db/lokijs.service';
-import { EXPECTED_MAX, EXPECTED_MIN, MOVIES_JSON_DATA } from './dataset/app.service.dataset';
 import { MovieService } from '../src/movie/movie.service';
+import { EXPECTED_MAX, EXPECTED_MIN } from './dataset/movie.service.dataset';
 
 describe('AppService (Retrieving the response from the main endpoint)', () => {
   let app;
-  let lokijsService: LokijsService;
   let moduleFixture: TestingModule;
 
   beforeAll(async () => {
@@ -17,9 +15,6 @@ describe('AppService (Retrieving the response from the main endpoint)', () => {
     app = moduleFixture.createNestApplication();
 
     await app.init();
-
-    lokijsService = moduleFixture.get<LokijsService>(LokijsService);
-    lokijsService.findWinnerMovies = jest.fn().mockReturnValue(MOVIES_JSON_DATA);
   });
 
   afterAll(async () => {
