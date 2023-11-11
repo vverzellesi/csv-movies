@@ -3,7 +3,7 @@ import * as csv from 'csvtojson';
 import * as _ from 'lodash';
 import { LokijsService } from '../db/lokijs.service';
 import { YearIntervalDto } from './dto/get-movies.dto';
-import { MoviesResponse } from './movie.controller';
+import { MovieProducerInfo, MoviesResponse } from './movie.controller';
 
 interface ProducersResponse {
     [producer: string]: Movie[];
@@ -67,42 +67,8 @@ export class MovieService {
             const minInterval = _.minBy(intervals);
             const maxInterval = _.maxBy(intervals);
 
-            if (results.min.length === 0 || minInterval < results.min[0].interval) {
-                results.min = [
-                    {
-                        producer,
-                        interval: minInterval,
-                        previousWin: years[intervals.indexOf(minInterval)],
-                        followingWin: years[intervals.indexOf(minInterval) + 1],
-                    },
-                ];
-            } else if (minInterval === results.min[0].interval) {
-                results.min.push({
-                    producer,
-                    interval: minInterval,
-                    previousWin: years[intervals.indexOf(minInterval)],
-                    followingWin: years[intervals.indexOf(minInterval) + 1],
-                });
-            }
-
-            if (results.max.length === 0 || maxInterval > results.max[0].interval) {
-                results.max = [
-                    {
-                        producer,
-                        interval: maxInterval,
-                        previousWin: years[intervals.indexOf(maxInterval)],
-                        followingWin: years[intervals.indexOf(maxInterval) + 1],
-                    },
-                ];
-            } else if (maxInterval === results.max[0].interval) {
-                results.max.push({
-                    producer,
-                    interval: maxInterval,
-                    previousWin: years[intervals.indexOf(maxInterval)],
-                    followingWin: years[intervals.indexOf(maxInterval) + 1],
-                });
-            }
-
+            results.min = this.updateIntervalResult(results.min, producer, minInterval, years, intervals, true);
+            results.max = this.updateIntervalResult(results.max, producer, maxInterval, years, intervals, false);
         }
 
         return results;
@@ -126,5 +92,30 @@ export class MovieService {
             _.orderBy(orderedMovies),
             movie => movie.producers
         );
+    }
+
+    private updateIntervalResult(
+        results: MovieProducerInfo[],
+        producer: string,
+        interval: number,
+        years: number[],
+        intervals: number[],
+        isMin: boolean): MovieProducerInfo[] {
+        if (results.length === 0 || (isMin ? interval < results[0].interval : interval > results[0].interval)) {
+            results = [{
+                producer,
+                interval,
+                previousWin: years[intervals.indexOf(interval)],
+                followingWin: years[intervals.indexOf(interval) + 1],
+            }];
+        } else if (interval === results[0].interval) {
+            results.push({
+                producer,
+                interval,
+                previousWin: years[intervals.indexOf(interval)],
+                followingWin: years[intervals.indexOf(interval) + 1],
+            });
+        }
+        return results;
     }
 }

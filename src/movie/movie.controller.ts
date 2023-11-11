@@ -2,7 +2,7 @@ import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
 import { YearIntervalDto } from './dto/get-movies.dto';
 import { MovieService } from './movie.service';
 
-interface MovieProducerInfo {
+export interface MovieProducerInfo {
     producer: string;
     interval: number;
     previousWin: number;
