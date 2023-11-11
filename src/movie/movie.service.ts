@@ -5,6 +5,18 @@ import { LokijsService } from '../db/lokijs.service';
 import { YearIntervalDto } from './dto/get-movies.dto';
 import { MoviesResponse } from './movie.controller';
 
+interface ProducersResponse {
+    [producer: string]: Movie[];
+}
+
+interface Movie {
+    year: string;
+    title: string;
+    studios: string;
+    producers: string;
+    winner: 'yes' | null;
+}
+
 @Injectable()
 export class CsvToJsonService implements OnModuleInit {
     constructor(
@@ -29,11 +41,11 @@ export class MovieService {
     ) { }
 
     async getProducersInterval(interval?: YearIntervalDto): Promise<MoviesResponse> {
-        const movies = _.isEmpty(interval) ?
+        const movies: Movie[] = _.isEmpty(interval) ?
             await this.lokijsService.findWinnerMovies() :
             await this.lokijsService.findWinnerMoviesWithInterval(interval.startYear, interval.endYear);
 
-        const groupedProducers: _.Dictionary<any[]> = this.groupProducers(movies);
+        const groupedProducers: _.Dictionary<ProducersResponse[]> = this.groupProducers(movies);
 
         const results = {
             min: [],
@@ -96,7 +108,7 @@ export class MovieService {
         return results;
     }
 
-    private groupProducers(movies): _.Dictionary<any[]> {
+    private groupProducers(movies): _.Dictionary<ProducersResponse[]> {
         const orderedMovies = movies.flatMap(movie => {
             const splittedProducers = movie.producers.split(/, | and |and /).filter(producer => producer);
             return splittedProducers.length > 1 ?
