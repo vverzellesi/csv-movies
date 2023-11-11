@@ -33,23 +33,8 @@ export class MovieService {
             await this.lokijsService.findWinnerMovies() :
             await this.lokijsService.findWinnerMoviesWithInterval(interval.startYear, interval.endYear);
 
-        const orderedMovies = movies.flatMap(movie => {
-            const splittedProducers = movie.producers.split(/, | and |and /).filter(producer => producer);
-            return splittedProducers.length > 1 ?
-                splittedProducers.map(producer => ({
-                    year: movie.year,
-                    title: movie.title,
-                    studios: movie.studios,
-                    producers: producer,
-                    winner: movie.winner,
-                })) :
-                movie;
-        });
+        const groupedProducers: _.Dictionary<any[]> = this.groupProducers(movies);
 
-        const groupedProducers = _.groupBy(
-            _.orderBy(orderedMovies),
-            movie => movie.producers
-        );
         const results = {
             min: [],
             max: [],
@@ -109,5 +94,25 @@ export class MovieService {
         }
 
         return results;
+    }
+
+    private groupProducers(movies): _.Dictionary<any[]> {
+        const orderedMovies = movies.flatMap(movie => {
+            const splittedProducers = movie.producers.split(/, | and |and /).filter(producer => producer);
+            return splittedProducers.length > 1 ?
+                splittedProducers.map(producer => ({
+                    year: movie.year,
+                    title: movie.title,
+                    studios: movie.studios,
+                    producers: producer,
+                    winner: movie.winner,
+                })) :
+                movie;
+        });
+
+        return _.groupBy(
+            _.orderBy(orderedMovies),
+            movie => movie.producers
+        );
     }
 }
