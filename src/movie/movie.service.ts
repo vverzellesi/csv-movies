@@ -68,13 +68,13 @@ export class MovieService {
             const maxInterval = _.maxBy(intervals);
 
             const occurrences = _.countBy(intervals);
-            const minOccurrencies = occurrences[minInterval];
-            const maxOccurrencies = occurrences[maxInterval];
+            const minOccurrences = occurrences[minInterval];
+            const maxOccurrences = occurrences[maxInterval];
 
-            for (let i = 0; i < minOccurrencies; i++) {
+            for (let i = 0; i < minOccurrences; i++) {
                 results.min = this.updateIntervalResult(results.min, producer, minInterval, years, intervals, true);
             }
-            for (let i = 0; i < maxOccurrencies; i++) {
+            for (let i = 0; i < maxOccurrences; i++) {
                 results.max = this.updateIntervalResult(results.max, producer, maxInterval, years, intervals, false);
             }
 
