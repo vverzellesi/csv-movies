@@ -24,16 +24,16 @@ export class LokijsService implements OnModuleInit {
     }
 
     findWinnerMovies() {
-        return this.movies.find({
+        return this.movies.chain().find({
             winner: 'yes',
-        });
+        }).simplesort('year').data();
     }
 
     findWinnerMoviesWithInterval(startYear: number, endYear: number) {
-        return this.movies.find({
+        return this.movies.chain().find({
             winner: 'yes',
             year: { '$between': [Number(startYear), Number(endYear)] }
-        });
+        }).simplesort('year').data();
     }
 
 }
